@@ -1,14 +1,18 @@
 monolog:
-    channels:
-        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+    channels: ['info_handler']
 
 when@dev:
     monolog:
         handlers:
+            info_handler:
+                type: stream
+                path: '%kernel.logs_dir%/%kernel.environment%_info.log'
+                level: info
+                channels: ["info_handler", request]
             main:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
-                level: debug
+                level: info
                 channels: ["!event"]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
@@ -40,6 +44,11 @@ when@test:
 when@prod:
     monolog:
         handlers:
+            info_handler:
+                type: stream
+                path: '%kernel.logs_dir%/%kernel.environment%_info.log'
+                level: info
+                channels: [ "info_handler", request ]
             main:
                 type: fingers_crossed
                 action_level: error
