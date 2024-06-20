@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - 9080:80
+    volumes:
+      - .:/var/www/html
+    networks:
+      - default
+    depends_on:
+      - app_db
+
+  app_db:
+    image: mysql:8.4.0
+    environment:
+      MYSQL_DATABASE: open_nigeria_api
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - 3306:3306
+    volumes:
+      - persistent:/var/lib/mysql
+    networks:
+      - default
+
+  swagger:
+    image: swaggerapi/swagger-ui
+    environment:
+      BASE_URL: /swagger
+      SWAGGER_JSON: /openapi/spec.yaml
+    ports:
+      - 9090:8080
+    platform: linux/amd64
+    volumes:
+      - ./docs/openapi:/openapi
+    networks:
+      - default
+
+volumes:
+  persistent:
