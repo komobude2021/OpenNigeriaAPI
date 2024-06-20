@@ -17,6 +17,11 @@ class RegionRepository extends ServiceEntityRepository
         parent::__construct($registry, Region::class);
     }
 
+    public function regionExists(string $name): bool
+    {
+        return $this->findOneBy(['name' => $name]) !== null;
+    }
+
     //    /**
     //     * @return Region[] Returns an array of Region objects
     //     */
